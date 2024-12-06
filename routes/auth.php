@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AmisController;
+use Illuminate\Notifications\Notification;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\Auth\PasswordController;
 use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\Auth\VerifyEmailController;
@@ -57,6 +59,7 @@ Route::middleware('auth')->group(function () {
 
     Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])
                 ->name('logout');
-     Route::get('/amis', [AmisController::class, 'amis'])
-    ->name('amis');
+
+    Route::get('/notification', [NotificationController::class, 'notification'])
+    ->name('notification');
 });

@@ -12,22 +12,34 @@ export default function Register() {
         email: '',
         password: '',
         password_confirmation: '',
+        avatar: null, // Champ pour l'avatar
     });
 
     useEffect(() => {
         return () => {
-            reset('password', 'password_confirmation');
+            reset('password', 'password_confirmation', 'avatar'); // Réinitialisation y compris l'avatar
         };
     }, []);
 
     const handleOnChange = (event) => {
-        setData(event.target.name, event.target.type === 'checkbox' ? event.target.checked : event.target.value);
+        setData(event.target.name, event.target.value); // Gestion des changements de champ classique
+    };
+
+    const handleAvatarChange = (event) => {
+        setData('avatar', event.target.files[0]); // Gestion du changement de l'avatar
     };
 
     const submit = (e) => {
         e.preventDefault();
 
-        post(route('register'));
+        const formData = new FormData();
+        formData.append('name', data.name);
+        formData.append('email', data.email);
+        formData.append('password', data.password);
+        formData.append('password_confirmation', data.password_confirmation);
+        formData.append('avatar', data.avatar); // Ajout de l'avatar au formulaire
+
+        post(route('register'), formData); // Envoi du formulaire avec l'avatar
     };
 
     return (
@@ -35,6 +47,7 @@ export default function Register() {
             <Head title="Register" />
 
             <form onSubmit={submit}>
+                {/* Champ de nom */}
                 <div>
                     <InputLabel htmlFor="name" value="Name" />
 
@@ -44,7 +57,6 @@ export default function Register() {
                         value={data.name}
                         className="mt-1 block w-full"
                         autoComplete="name"
-                        isFocused={true}
                         onChange={handleOnChange}
                         required
                     />
@@ -52,6 +64,7 @@ export default function Register() {
                     <InputError message={errors.name} className="mt-2" />
                 </div>
 
+                {/* Champ d'email */}
                 <div className="mt-4">
                     <InputLabel htmlFor="email" value="Email" />
 
@@ -69,6 +82,23 @@ export default function Register() {
                     <InputError message={errors.email} className="mt-2" />
                 </div>
 
+                {/* Champ d'avatar */}
+                <div className="mt-4">
+                    <InputLabel htmlFor="avatar" value="Avatar" />
+
+                    <input
+                        id="avatar"
+                        type="file"
+                        name="avatar"
+                        className="mt-1 block w-full"
+                        onChange={handleAvatarChange}
+                        required
+                    />
+
+                    <InputError message={errors.avatar} className="mt-2" />
+                </div>
+
+                {/* Champ de mot de passe */}
                 <div className="mt-4">
                     <InputLabel htmlFor="password" value="Password" />
 
@@ -86,6 +116,7 @@ export default function Register() {
                     <InputError message={errors.password} className="mt-2" />
                 </div>
 
+                {/* Champ de confirmation de mot de passe */}
                 <div className="mt-4">
                     <InputLabel htmlFor="password_confirmation" value="Confirm Password" />
 
@@ -103,6 +134,7 @@ export default function Register() {
                     <InputError message={errors.password_confirmation} className="mt-2" />
                 </div>
 
+                {/* Bouton de soumission */}
                 <div className="flex items-center justify-end mt-4">
                     <Link
                         href={route('login')}

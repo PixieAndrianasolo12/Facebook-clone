@@ -1,27 +1,38 @@
+import React from 'react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import SidebarLayout from '@/Layouts/SidebarLayout';
-import { Head } from '@inertiajs/react';
+import { Head, usePage } from '@inertiajs/react';
+import CreatePost from '../Pages/createpost'; // Assurez-vous que le chemin est correct
 
-export default function Dashboard({ auth }) {
+const Dashboard = ({ auth }) => {
+    const { props } = usePage();
+    const { posts } = props;
+
     return (
-        <AuthenticatedLayout
-            user={auth.user}
-        >
-
+        <AuthenticatedLayout user={auth.user}>
             <Head title="Dashboard" />
 
-            <div className="py-12">
-                <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                <SidebarLayout
-            user={auth.user}
-        >
-
+            <SidebarLayout user={auth.user}>
+                {/* Contenu de la barre latérale */}
             </SidebarLayout>
-                </div>
+
+            {/* Contenu principal */}
+            <CreatePost />
+
+            <div>
+                <h2>Dashboard</h2>
+                {posts && posts.length > 0 ? (
+                    <div>
+                        {posts.map((post) => (
+                            <div key={post.id}>{post.id}</div>
+                        ))}
+                    </div>
+                ) : (
+                    <div>not found</div>
+                )}
             </div>
         </AuthenticatedLayout>
-
-
-
     );
-}
+};
+
+export default Dashboard;
